@@ -78,6 +78,7 @@ window.__documents = ${JSON.stringify(documents)};
 <script src="file://${ROOT}/node_modules/mathlive/mathlive.min.js"></script>
 <script src="file://${ROOT}/media/canvas-engine.bundle.js"></script>
 <script src="file://${ROOT}/media/plot.js"></script>
+<script src="file://${ROOT}/media/ribbon.js"></script>
 <script src="file://${ROOT}/media/canvas.js"></script>
 <script src="file://${ROOT}/media/worksheet.js"></script>
 <script>
@@ -93,6 +94,7 @@ window.__documents = ${JSON.stringify(documents)};
   // the loaded document.
   const block = id => lastDoc()?.blocks.find(item => item.id === id) ?? initialBlock(id);
   const undoButton = () => [...document.querySelectorAll('button')].find(button => button.textContent.trim() === 'Undo');
+  const redoButton = () => [...document.querySelectorAll('button')].find(button => button.textContent.trim() === 'Redo');
   const mathFields = () => [...document.querySelectorAll('math-field.spatial-mathfield')];
   const resultText = id => document.querySelector('[data-result-for="' + id + '"]')?.textContent ?? '';
   const typeInto = async (field, latex) => { field.value = latex; field.dispatchEvent(new Event('input', { bubbles: true })); await tick(200); };
@@ -112,6 +114,10 @@ window.__documents = ${JSON.stringify(documents)};
     check('typing enables Undo', startsDisabled && enabledByTyping, 'initially disabled=' + startsDisabled + ' enabled after typing=' + enabledByTyping);
     check('Undo restores the previous value (17 -> 12)', undone.includes('12') && !undone.includes('17'), 'after undo=' + undone);
     check('Undo also restores the document', block('a')?.latex === 'a\\\\coloneq20', 'latex=' + block('a')?.latex);
+    redoButton().click();
+    await tick(250);
+    const redone = resultText('average');
+    check('Redo reapplies the value (12 -> 17)', redone.includes('17'), 'after redo=' + redone);
 
     // 2. Drag and then type
     await load('drag');
@@ -157,6 +163,16 @@ window.__documents = ${JSON.stringify(documents)};
     await typeInto(mathFields()[0], 'd\\\\coloneq2\\\\,\\\\mathrm{foobar}');
     const misspelled = document.querySelector('[data-result-for="distance"]')?.textContent ?? '';
     check('a misspelled unit shows the diagnostic on the sheet', misspelled.includes('Unknown unit'), 'text=' + misspelled);
+
+    // 5. Ribbon structure
+    await load('calc');
+    const tabs = document.querySelectorAll('.ribbon-tab');
+    check('ribbon shows four tabs', tabs.length === 4, 'tabs=' + tabs.length);
+    const insertTab = [...tabs].find(tab => tab.textContent.trim() === 'Insert');
+    insertTab.click();
+    await tick(100);
+    const insertButtons = [...document.querySelectorAll('.ribbon-group .ribbon-button')].map(button => button.textContent.trim());
+    check('ribbon Insert tab lists functions and units', insertButtons.includes('Fraction') && insertButtons.includes('Sine') && insertButtons.includes('m'), insertButtons.join(', '));
   } catch (error) {
     results.push({ name: 'verification run', pass: false, detail: 'exception: ' + (error && error.stack ? error.stack.split('\\n').slice(0, 3).join(' | ') : error) });
   }

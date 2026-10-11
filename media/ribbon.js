@@ -6,14 +6,11 @@
  * DATA, not code: canvas.js builds the ribbon from `MathRibbon.registry` and feeds
  * `MathRibbon.SelectionContext` with the current selection.
  *
- * Integration (to do in canvas.js, in place of the current toolbar):
- *   1. create `const ctx = new MathRibbon.SelectionContext();`
- *   2. on the sheet's `focusin`/`focusout`, call `ctx.setSelection({ block, mathField })`;
- *   3. set `ctx.delegate` with the concrete operations:
- *        insert(latex), addBlock(type), runCurrentBlock(), interrupt(), undo(), redo(),
- *        addCurve(), removeCurve();
- *   4. build the ribbon: for each tab, `registry.groupsForTab(tab)`, render buttons and
- *      wire `run(ctx)` with the enabled/disabled state from `registry.isEnabled(action, ctx)`.
+ * An action may declare:
+ *   - `size`: 'large' (icon above the label) or 'small' (icon beside the label).
+ *   - `icon`: key into `MathRibbon.icons` (inline SVG paths, 24×24, stroke-based).
+ *   - `when(ctx)`: enables/disables the button for the current selection.
+ *   - `run(ctx)`: what the button does.
  */
 (function () {
   /**
@@ -37,6 +34,8 @@
     get blockType() { return this.activeBlock ? this.activeBlock.type : null; }
     get pythonBlockActive() { return this.blockType === 'python'; }
     get plotBlockActive() { return this.blockType === 'plot'; }
+    get canUndo() { return this.delegate?.canUndo?.() ?? false; }
+    get canRedo() { return this.delegate?.canRedo?.() ?? false; }
 
     // Operations the ribbon delegates to canvas.js (no-op when the delegate is absent).
     insert(latex) { this.delegate?.insert?.(latex); }
@@ -83,13 +82,23 @@
   const registry = new ActionRegistry();
   const registerAction = action => registry.register(action);
 
-  // ---------------------------------------------------------------------------
-  // Default gallery. `run` delegates to the context; none of these actions touch
-  // the DOM directly. MathLive placeholders: #@ = cursor, #? = placeholder.
-  // ---------------------------------------------------------------------------
+  // Inline stroke icons (24×24). The <svg> wrapper sets stroke/fill; these are the paths.
+  const icons = {
+    text: '<path d="M4 5h16"/><path d="M12 5v14"/>',
+    equation: '<path d="M6 5h8"/><path d="M14 5l-9 15"/>',
+    plot: '<path d="M3 21V3"/><path d="M3 21h18"/><path d="M7 15l4-5 3 3 5-7"/>',
+    code: '<path d="M9 6l-5 6 5 6"/><path d="M15 6l5 6-5 6"/>',
+    undo: '<path d="M8 9L3 14l5 5"/><path d="M3 14h11a6 6 0 010 12h-4"/>',
+    redo: '<path d="M16 9l5 5-5 5"/><path d="M21 14H10a6 6 0 000 12h4"/>',
+    run: '<path d="M7 5l12 7-12 7z"/>',
+    interrupt: '<rect x="6" y="6" width="12" height="12" rx="1.5"/>',
+    addCurve: '<path d="M12 5v14M5 12h14"/>',
+    removeCurve: '<path d="M5 12h14"/>'
+  };
+
   function mathTemplate(id, label, latex, shortcut) {
     return {
-      id, tab: 'insert', group: 'functions', label, shortcut,
+      id, tab: 'insert', group: 'functions', label, shortcut, size: 'small',
       when: ctx => ctx.mathFieldFocused,
       run: ctx => ctx.insert(latex)
     };
@@ -108,9 +117,9 @@
   registerAction(mathTemplate('insert.sum', 'Sum', '\\sum_{#?}^{#?} #@', ''));
 
   // Common symbols (a sample; MathLive's virtual keyboard covers the rest).
-  for (const [id, latex] of [['insert.alpha', '\\alpha'], ['insert.beta', '\\beta'], ['insert.pi', '\\pi']]) {
+  for (const [id, label, latex] of [['insert.alpha', 'α', '\\alpha'], ['insert.beta', 'β', '\\beta'], ['insert.pi', 'π', '\\pi']]) {
     registerAction({
-      id, tab: 'insert', group: 'symbols', label: latex.slice(1), shortcut: '',
+      id, tab: 'insert', group: 'symbols', label, shortcut: '', size: 'small',
       when: ctx => ctx.mathFieldFocused,
       run: ctx => ctx.insert(latex)
     });
@@ -119,31 +128,39 @@
   // Common units (a sample; replaces the current unit/conversion selects).
   for (const unit of ['m', 'cm', 'km', 's', 'min', 'h', 'kg', 'g', 'm/s', 'km/h']) {
     registerAction({
-      id: 'insert.unit.' + unit, tab: 'insert', group: 'units', label: unit, shortcut: '',
+      id: 'insert.unit.' + unit, tab: 'insert', group: 'units', label: unit, shortcut: '', size: 'small',
       when: ctx => ctx.mathFieldFocused,
       run: ctx => ctx.insert('\\,\\mathrm{' + unit + '}')
     });
   }
 
-  // Home tab — insert blocks.
-  for (const [type, label] of [['text', 'Text'], ['math', 'Equation'], ['plot', 'Plot'], ['python', 'Code']]) {
+  // Home tab — insert blocks (large buttons, like Word's primary actions).
+  const homeInsert = [
+    ['text', 'Text', 'text'],
+    ['math', 'Equation', 'equation'],
+    ['plot', 'Plot', 'plot'],
+    ['python', 'Code', 'code']
+  ];
+  for (const [type, label, icon] of homeInsert) {
     registerAction({
-      id: 'home.add.' + type, tab: 'home', group: 'insert', label, shortcut: '',
+      id: 'home.add.' + type, tab: 'home', group: 'insert', label, icon, shortcut: '', size: 'large',
+      // Python blocks are not part of the document model yet (milestone 2).
+      when: type === 'python' ? () => false : undefined,
       run: ctx => ctx.addBlock(type)
     });
   }
 
   // Home tab — history.
-  registerAction({ id: 'home.undo', tab: 'home', group: 'history', label: 'Undo', run: ctx => ctx.undo() });
-  registerAction({ id: 'home.redo', tab: 'home', group: 'history', label: 'Redo', run: ctx => ctx.redo() });
+  registerAction({ id: 'home.undo', tab: 'home', group: 'history', label: 'Undo', icon: 'undo', size: 'small', when: ctx => ctx.canUndo, run: ctx => ctx.undo() });
+  registerAction({ id: 'home.redo', tab: 'home', group: 'history', label: 'Redo', icon: 'redo', size: 'small', when: ctx => ctx.canRedo, run: ctx => ctx.redo() });
 
   // Plot tab.
-  registerAction({ id: 'plot.addCurve', tab: 'plot', group: 'curves', label: '+ Curve', when: ctx => ctx.plotBlockActive, run: ctx => ctx.addCurve() });
-  registerAction({ id: 'plot.removeCurve', tab: 'plot', group: 'curves', label: 'Remove curve', when: ctx => ctx.plotBlockActive, run: ctx => ctx.removeCurve() });
+  registerAction({ id: 'plot.addCurve', tab: 'plot', group: 'curves', label: 'Add curve', icon: 'addCurve', size: 'small', when: ctx => ctx.plotBlockActive, run: ctx => ctx.addCurve() });
+  registerAction({ id: 'plot.removeCurve', tab: 'plot', group: 'curves', label: 'Remove curve', icon: 'removeCurve', size: 'small', when: ctx => ctx.plotBlockActive, run: ctx => ctx.removeCurve() });
 
   // Code tab.
-  registerAction({ id: 'code.run', tab: 'code', group: 'run', label: 'Run', when: ctx => ctx.pythonBlockActive, run: ctx => ctx.runCurrentBlock() });
-  registerAction({ id: 'code.interrupt', tab: 'code', group: 'run', label: 'Interrupt', when: ctx => ctx.pythonBlockActive, run: ctx => ctx.interrupt() });
+  registerAction({ id: 'code.run', tab: 'code', group: 'run', label: 'Run', icon: 'run', size: 'large', when: ctx => ctx.pythonBlockActive, run: ctx => ctx.runCurrentBlock() });
+  registerAction({ id: 'code.interrupt', tab: 'code', group: 'run', label: 'Interrupt', icon: 'interrupt', size: 'large', when: ctx => ctx.pythonBlockActive, run: ctx => ctx.interrupt() });
 
-  globalThis.MathRibbon = { SelectionContext, ActionRegistry, registry, registerAction };
+  globalThis.MathRibbon = { SelectionContext, ActionRegistry, registry, registerAction, icons };
 })();

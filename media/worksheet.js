@@ -4,6 +4,7 @@
   const app = document.getElementById('app');
   let doc = null;
   let history = [];
+  let redoStack = [];
   let lastSent = null;
 
   const id = () => (globalThis.crypto && crypto.randomUUID ? crypto.randomUUID() : 'b' + Date.now() + Math.random().toString(16).slice(2));
@@ -23,6 +24,7 @@
   function remember() {
     history.push(JSON.stringify(doc));
     if (history.length > 100) history.shift();
+    redoStack = [];
     updateUndo();
   }
   function updateUndo() {
@@ -160,12 +162,19 @@
   }
   function undoChange() {
     if (!history.length) return;
+    redoStack.push(JSON.stringify(doc));
     doc = JSON.parse(history.pop());
+    render(); changed();
+  }
+  function redoChange() {
+    if (!redoStack.length) return;
+    history.push(JSON.stringify(doc));
+    doc = JSON.parse(redoStack.pop());
     render(); changed();
   }
   function render() {
     if (doc.layout === 'canvas') {
-      MathCanvas.render(app, doc, { changed, remember, canUndo: () => history.length > 0, undo: undoChange });
+      MathCanvas.render(app, doc, { changed, remember, canUndo: () => history.length > 0, canRedo: () => redoStack.length > 0, undo: undoChange, redo: redoChange });
       return;
     }
     app.replaceChildren();
@@ -206,6 +215,7 @@
       } else MathCore.evaluateDocument(incoming);
       doc = incoming;
       history = [];
+      redoStack = [];
       lastSent = message.content;
       render();
     } catch (error) {

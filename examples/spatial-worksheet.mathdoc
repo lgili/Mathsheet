@@ -57,6 +57,27 @@
       "x": 281,
       "y": 408,
       "latex": ""
+    },
+    {
+      "id": "981ee36d-3925-4ef9-8286-e10da2700df1",
+      "type": "math",
+      "x": 543,
+      "y": 124,
+      "latex": ""
+    },
+    {
+      "id": "ef88e624-8ad9-414e-ad37-d1ae34690d55",
+      "type": "math",
+      "x": 543,
+      "y": 124,
+      "latex": "z"
+    },
+    {
+      "id": "704552d2-855e-4af5-aeb7-0e72bd80c6e4",
+      "type": "math",
+      "x": 499,
+      "y": 172,
+      "latex": "\\sum_{\\placeholder{}}^{\\placeholder{}}\\placeholder{}"
     }
   ]
 }
