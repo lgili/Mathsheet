@@ -1,0 +1,47 @@
+name: verify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  verify:
+    name: tests, examples and interface
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      # The lockfile decides the MathLive and Compute Engine versions the checks run
+      # against, so install exactly what it pins.
+      - name: Install dependencies
+        run: npm ci
+
+      # media/canvas-engine.bundle.js is committed, so a stale bundle would make the
+      # interface checks pass against code that is no longer in engine/canvas-core.mjs.
+      - name: Rebuild the sheet engine
+        run: npm run build
+
+      - name: Fail if the committed bundle changed
+        run: git diff --exit-code -- media/canvas-engine.bundle.js
+
+      - name: Unit tests
+        run: npm test
+
+      # Checks the canonical examples against the engine and the numbers the README
+      # promises, then reports any example that drifted from that state.
+      - name: Check the examples
+        run: npm run examples:check
+
+      # Runs headless Chrome over the webview scripts. tools/verify-ui.mjs finds
+      # google-chrome on the runner and retries with --no-sandbox if the environment
+      # does not allow the browser sandbox to start.
+      - name: Verify the interface in a browser
+        run: npm run verify:ui
