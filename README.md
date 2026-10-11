@@ -1,5 +1,7 @@
 # Mathsheet — an executable mathematical document
 
+![verify](https://github.com/lgili/Mathsheet/actions/workflows/verify.yml/badge.svg)
+
 > Proposal and validation log. The spatial sheet already accepts definitions, quantities with units, conversions and calculations directly in the edited expressions. The following sections describe the broader direction of the product.
 
 The name **Mathsheet** joins *math* + *sheet*: a sheet where you write mathematics and the result appears in the same place. The document remains a `.mathdoc`, opened by the **Mathsheet** editor that the extension registers.
