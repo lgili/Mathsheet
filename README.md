@@ -9,6 +9,18 @@ The name **Mathsheet** joins *math* + *sheet*: a sheet where you write mathemati
 - Editor: **Mathsheet**, associated with `*.mathdoc` files.
 - Structure: `src/extension.js` (VS Code host), `engine/canvas-core.mjs` (sheet engine), `engine/core.js` (numeric engine), `engine/kernel/runner.py` (Python), `media/` (webview), `examples/` and `test/`.
 
+## Install
+
+From a `.vsix` built in this repository:
+
+```bash
+npm install
+npm run package
+code --install-extension mathsheet.vsix
+```
+
+Then open any `*.mathdoc` file, or run **Mathsheet: New sheet** from the command palette. The extension is not on the Marketplace yet; the publisher is `lgili` and the extension id is `lgili.mathsheet`.
+
 ## Current prototype: writing and calculating on the sheet
 
 Click an empty spot to create a mathematical region. Typing is formatted on the sheet itself by [MathLive](https://mathlive.io/mathlive/): `^` creates an exponent, `/` creates a fraction and `_` creates a subscript. Write `a:=20` to define `a`, `b:=4` in another region and `(a+b)/2=` to get `12`. Changing `a` to `30` updates the result to `17`. The expression that appears in the editor is the input interpreted by [Compute Engine](https://mathlive.io/compute-engine/guides/latex-syntax/).
