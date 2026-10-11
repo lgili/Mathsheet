@@ -69,16 +69,19 @@
   ],
   "scripts": {
     "test": "node --test",
-    "build": "esbuild engine/canvas-core.mjs --bundle --minify --format=iife --global-name=MathCanvasEngine --platform=browser --outfile=media/canvas-engine.bundle.js",
+    "build": "esbuild engine/canvas-core.mjs --bundle --minify --format=iife --global-name=MathCanvasEngine --platform=browser --outfile=media/canvas-engine.bundle.js && esbuild tools/vscode-elements-entry.js --bundle --minify --format=iife --platform=browser --outfile=media/vscode-elements.bundle.js",
     "examples:reset": "node tools/make-examples.mjs",
     "examples:check": "node tools/make-examples.mjs --check",
     "verify:ui": "node tools/verify-ui.mjs",
-    "verify": "npm test && npm run examples:check && npm run verify:ui",
+    "verify": "npm test && npm run build:check && npm run examples:check && npm run verify:ui",
     "package": "vsce package --out mathsheet.vsix",
-    "publish": "vsce publish --no-dependencies"
+    "publish": "vsce publish --no-dependencies",
+    "build:check": "node tools/build-check.mjs"
   },
   "dependencies": {
     "@cortex-js/compute-engine": "0.151.0",
+    "@vscode-elements/elements": "^2.5.1",
+    "@vscode/codicons": "^0.0.45",
     "mathlive": "0.111.1"
   },
   "devDependencies": {

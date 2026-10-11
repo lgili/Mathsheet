@@ -24,13 +24,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # media/canvas-engine.bundle.js is committed, so a stale bundle would make the
-      # interface checks pass against code that is no longer in engine/canvas-core.mjs.
-      - name: Rebuild the sheet engine
-        run: npm run build
-
-      - name: Fail if the committed bundle changed
-        run: git diff --exit-code -- media/canvas-engine.bundle.js
+      # The bundles in media/ are committed, so a stale one would make the interface
+      # checks pass against code that is no longer in the sources. build:check reads the
+      # output paths from the build script, so a second bundle is covered automatically.
+      - name: Build artifacts match their source
+        run: npm run build:check
 
       - name: Unit tests
         run: npm test
