@@ -21,6 +21,21 @@
   const GROUP_LABELS = { insert: 'Insert', history: 'History', functions: 'Functions', symbols: 'Symbols', units: 'Units', curves: 'Curves', run: 'Run' };
   const UNITS = ['m', 'cm', 'km', 's', 'min', 'h', 'kg', 'g', 'm/s', 'km/h'];
 
+  function svgIcon(id) {
+    const paths = MathRibbon.icons[id];
+    if (!paths) return null;
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    svg.setAttribute('aria-hidden', 'true');
+    svg.setAttribute('fill', 'none');
+    svg.setAttribute('stroke', 'currentColor');
+    svg.setAttribute('stroke-width', '1.8');
+    svg.setAttribute('stroke-linecap', 'round');
+    svg.setAttribute('stroke-linejoin', 'round');
+    svg.innerHTML = paths;
+    return svg;
+  }
+
   // Builds the ribbon from the action registry and returns a refresh() that syncs the
   // enabled/disabled state of every button with the current selection context.
   function renderRibbon(host, ctx) {
@@ -36,23 +51,32 @@
       }
     }
 
+    function renderButton(action) {
+      const button = node('button', 'ribbon-button ribbon-button-' + (action.size === 'large' ? 'large' : 'small'));
+      button.type = 'button';
+      button.dataset.action = action.id;
+      button.title = action.label + (action.shortcut ? ' · shortcut: ' + action.shortcut : '');
+      if (action.icon) {
+        const icon = svgIcon(action.icon);
+        if (icon) button.append(icon);
+      }
+      button.append(node('span', 'ribbon-button-label', action.label));
+      // Keep focus on the math field instead of the button.
+      button.addEventListener('mousedown', event => event.preventDefault());
+      button.addEventListener('click', () => { action.run(ctx); refresh(); });
+      return button;
+    }
+
     function buildGroups() {
       groups.replaceChildren();
       for (const [key] of TABS) {
         if (key !== activeTab) continue;
         for (const [group, actions] of registry.groupsForTab(key)) {
           const groupEl = node('div', 'ribbon-group');
-          groupEl.append(node('span', 'ribbon-group-label', GROUP_LABELS[group] || group));
-          for (const action of actions) {
-            const button = node('button', 'ribbon-button', action.label);
-            button.type = 'button';
-            button.dataset.action = action.id;
-            button.title = action.label + (action.shortcut ? ' · shortcut: ' + action.shortcut : '');
-            // Keep focus on the math field instead of the button.
-            button.addEventListener('mousedown', event => event.preventDefault());
-            button.addEventListener('click', () => { action.run(ctx); refresh(); });
-            groupEl.append(button);
-          }
+          const buttons = node('div', 'ribbon-group-buttons');
+          for (const action of actions) buttons.append(renderButton(action));
+          groupEl.append(buttons);
+          groupEl.append(node('div', 'ribbon-group-label', GROUP_LABELS[group] || group));
           groups.append(groupEl);
         }
       }
@@ -63,6 +87,7 @@
       const tab = node('button', 'ribbon-tab', label);
       tab.type = 'button';
       tab.dataset.tab = key;
+      tab.setAttribute('role', 'tab');
       tab.classList.toggle('active', key === activeTab);
       tab.setAttribute('aria-selected', key === activeTab ? 'true' : 'false');
       tab.addEventListener('click', () => {

@@ -1,7 +1,11 @@
 # Development-only folders that must not ship in the packaged extension.
 # node_modules is handled by vsce (dependencies kept, devDependencies excluded).
 .vscode/**
-docs/**
+docs/DESIGN.md
+docs/ribbon-preview.png
+docs/vision-final.png
+docs/vision-final.svg
+docs/images/store-1280x720.png
 test/**
 tools/**
 .npm-cache/**
@@ -10,6 +14,9 @@ tools/**
 package-lock.json
 media/icon.svg
 *.vsix
+
+# docs/images/sheet-units.png and sheet-plot.png stay: the README that the Marketplace
+# renders points at them, so a packaged listing would break without them.
 
 # The sheet engine is pre-bundled into media/canvas-engine.bundle.js and the webview
 # loads MathLive straight from node_modules/mathlive, so these bare packages are
