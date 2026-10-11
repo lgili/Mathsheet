@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "blocks": [
+    {
+      "id": "intro",
+      "type": "text",
+      "text": "A math worksheet: change a or b and watch the result."
+    },
+    {
+      "id": "a",
+      "type": "definition",
+      "symbol": "a",
+      "expression": [
+        {
+          "type": "text",
+          "value": "22"
+        }
+      ]
+    },
+    {
+      "id": "b",
+      "type": "definition",
+      "symbol": "b",
+      "expression": [
+        {
+          "type": "text",
+          "value": "2.5"
+        }
+      ]
+    },
+    {
+      "id": "mean",
+      "type": "evaluation",
+      "expression": [
+        {
+          "type": "fraction",
+          "numerator": "a+b*5",
+          "denominator": "2"
+        },
+        {
+          "type": "fraction",
+          "numerator": "",
+          "denominator": ""
+        }
+      ]
+    }
+  ]
+}

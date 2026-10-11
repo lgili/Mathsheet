@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "layout": "canvas",
+  "blocks": [
+    {
+      "id": "intro",
+      "type": "text",
+      "x": 70,
+      "y": 45,
+      "text": "Define a distance and a time. The speed and the conversions below recalculate automatically."
+    },
+    {
+      "id": "distance",
+      "type": "math",
+      "x": 70,
+      "y": 130,
+      "latex": "d\\coloneq1500\\,\\mathrm{m}"
+    },
+    {
+      "id": "time",
+      "type": "math",
+      "x": 70,
+      "y": 220,
+      "latex": "t\\coloneq120\\,\\mathrm{s}"
+    },
+    {
+      "id": "speed",
+      "type": "math",
+      "x": 70,
+      "y": 310,
+      "latex": "\\frac{d}{t}="
+    },
+    {
+      "id": "speed_kmh",
+      "type": "math",
+      "x": 70,
+      "y": 400,
+      "latex": "\\frac{d}{t}=",
+      "convertTo": "km/h"
+    },
+    {
+      "id": "distance_km",
+      "type": "math",
+      "x": 70,
+      "y": 490,
+      "latex": "d=",
+      "convertTo": "km"
+    },
+    {
+      "id": "invalid_note",
+      "type": "text",
+      "x": 70,
+      "y": 570,
+      "text": "Error example: you cannot add length and time."
+    },
+    {
+      "id": "invalid",
+      "type": "math",
+      "x": 70,
+      "y": 635,
+      "latex": "d+t="
+    }
+  ]
+}

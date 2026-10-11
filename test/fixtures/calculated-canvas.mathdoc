@@ -1,0 +1,1 @@
+{"version":1,"layout":"canvas","blocks":[{"id":"a","type":"math","x":70,"y":100,"latex":"a\\coloneq20"},{"id":"b","type":"math","x":70,"y":200,"latex":"b\\coloneq4"},{"id":"average","type":"math","x":70,"y":300,"latex":"\\frac{a+b}{2}="}]}

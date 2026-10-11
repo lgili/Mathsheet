@@ -1,0 +1,61 @@
+{
+  "name": "mathsheet",
+  "displayName": "Mathsheet — Live Math Worksheet",
+  "description": "Write math on a visual sheet and get live results: editable equations, engineering units, plots and Python blocks.",
+  "version": "0.0.2",
+  "private": true,
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "main": "./src/extension.js",
+  "activationEvents": [
+    "onCustomEditor:mathsheet.sheet",
+    "onCommand:mathsheet.newSheet"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "mathsheet.newSheet",
+        "title": "Mathsheet: New sheet"
+      }
+    ],
+    "customEditors": [
+      {
+        "viewType": "mathsheet.sheet",
+        "displayName": "Mathsheet",
+        "selector": [
+          {
+            "filenamePattern": "*.mathdoc"
+          }
+        ],
+        "priority": "default"
+      }
+    ]
+  },
+  "keywords": [
+    "math",
+    "mathematics",
+    "worksheet",
+    "calculator",
+    "units",
+    "engineering",
+    "notebook",
+    "equation",
+    "plot"
+  ],
+  "scripts": {
+    "test": "node --test",
+    "build": "esbuild engine/canvas-core.mjs --bundle --minify --format=iife --global-name=MathCanvasEngine --platform=browser --outfile=media/canvas-engine.bundle.js",
+    "examples:reset": "node tools/make-examples.mjs",
+    "examples:check": "node tools/make-examples.mjs --check",
+    "verify:ui": "node tools/verify-ui.mjs",
+    "verify": "npm test && npm run examples:check && npm run verify:ui"
+  },
+  "dependencies": {
+    "@cortex-js/compute-engine": "0.151.0",
+    "mathlive": "0.111.1"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  }
+}

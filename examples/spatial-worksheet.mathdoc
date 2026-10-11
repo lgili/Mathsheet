@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "layout": "canvas",
+  "blocks": [
+    {
+      "id": "note",
+      "type": "text",
+      "x": 72,
+      "y": 55,
+      "text": "Click an empty spot on the sheet and write an expression. Try x^2, a/b and x_1."
+    },
+    {
+      "id": "equation",
+      "type": "math",
+      "x": 72,
+      "y": 170,
+      "latex": "x^2+\\frac{1}{2}"
+    },
+    {
+      "id": "7bfc2b7a-506c-45fe-947f-e50167b0eadd",
+      "type": "math",
+      "x": 407,
+      "y": 289,
+      "latex": "z^2+\\frac12"
+    },
+    {
+      "id": "f8c77f02-c396-40da-8ff1-7ef482a4e457",
+      "type": "math",
+      "x": 161,
+      "y": 369,
+      "latex": ""
+    },
+    {
+      "id": "853d1dd3-a7f5-4b70-a5ce-e9fa0c0ff0d0",
+      "type": "math",
+      "x": 125,
+      "y": 337,
+      "latex": ""
+    },
+    {
+      "id": "9dd1d334-596b-45c8-b149-38fc43d32803",
+      "type": "math",
+      "x": 125,
+      "y": 337,
+      "latex": ""
+    },
+    {
+      "id": "b6662316-ef84-4fc3-b9aa-c4e5f2a7ff40",
+      "type": "math",
+      "x": 125,
+      "y": 337,
+      "latex": "x^2+\\frac{a}{2}"
+    },
+    {
+      "id": "729374f0-50b0-427e-a6be-10590adeeea0",
+      "type": "math",
+      "x": 281,
+      "y": 408,
+      "latex": ""
+    }
+  ]
+}

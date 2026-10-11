@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "blocks": [
+    { "id": "intro", "type": "text", "text": "Test example." },
+    { "id": "a", "type": "definition", "symbol": "a", "expression": [{ "type": "text", "value": "20" }] },
+    { "id": "b", "type": "definition", "symbol": "b", "expression": [{ "type": "text", "value": "4" }] },
+    { "id": "mean", "type": "evaluation", "expression": [{ "type": "fraction", "numerator": "a+b", "denominator": "2" }] }
+  ]
+}

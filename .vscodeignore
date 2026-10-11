@@ -1,0 +1,6 @@
+# Development-only folders that must not ship in the packaged extension.
+# node_modules is handled by vsce (dependencies kept, devDependencies excluded).
+.vscode/**
+docs/**
+test/**
+tools/**

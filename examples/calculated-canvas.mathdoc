@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "layout": "canvas",
+  "blocks": [
+    {
+      "id": "guide",
+      "type": "text",
+      "x": 70,
+      "y": 50,
+      "text": "Change a or b. The last expression uses the definitions above and recalculates automatically."
+    },
+    {
+      "id": "a",
+      "type": "math",
+      "x": 70,
+      "y": 150,
+      "latex": "a\\coloneq20"
+    },
+    {
+      "id": "b",
+      "type": "math",
+      "x": 70,
+      "y": 235,
+      "latex": "b\\coloneq4"
+    },
+    {
+      "id": "average",
+      "type": "math",
+      "x": 70,
+      "y": 320,
+      "latex": "\\frac{a+b}{2}="
+    }
+  ]
+}

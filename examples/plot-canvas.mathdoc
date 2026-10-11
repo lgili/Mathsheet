@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "layout": "canvas",
+  "blocks": [
+    {
+      "id": "intro",
+      "type": "text",
+      "x": 70,
+      "y": 40,
+      "text": "Compare three amplitudes of the same function. Change a, b or c; the three curves below recalculate."
+    },
+    {
+      "id": "a",
+      "type": "math",
+      "x": 70,
+      "y": 140,
+      "latex": "a\\coloneq1"
+    },
+    {
+      "id": "b",
+      "type": "math",
+      "x": 70,
+      "y": 215,
+      "latex": "b\\coloneq2"
+    },
+    {
+      "id": "c",
+      "type": "math",
+      "x": 70,
+      "y": 290,
+      "latex": "c\\coloneq3"
+    },
+    {
+      "id": "waves",
+      "type": "plot",
+      "x": 55,
+      "y": 390,
+      "variable": "x",
+      "min": -6.28,
+      "max": 6.28,
+      "curves": [
+        {
+          "id": "first",
+          "name": "a",
+          "latex": "a\\sin(x)"
+        },
+        {
+          "id": "second",
+          "name": "b",
+          "latex": "b\\sin(x)"
+        },
+        {
+          "id": "third",
+          "name": "c",
+          "latex": "c\\sin(x)"
+        }
+      ]
+    }
+  ]
+}
