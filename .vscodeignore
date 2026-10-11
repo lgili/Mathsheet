@@ -10,3 +10,10 @@ tools/**
 package-lock.json
 media/icon.svg
 *.vsix
+
+# The sheet engine is pre-bundled into media/canvas-engine.bundle.js and the webview
+# loads MathLive straight from node_modules/mathlive, so these bare packages are
+# build-time only. Shipping them unpacked added roughly 5 MB to the package.
+node_modules/@cortex-js/**
+node_modules/@arnog/**
+node_modules/complex.js/**
