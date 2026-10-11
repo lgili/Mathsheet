@@ -39,7 +39,7 @@ Open `examples/plot-canvas.mathdoc` to compare `a sin(x)`, `b sin(x)` and `c sin
 
 ### Units in the prototype
 
-On the sheet, select an equation and choose a unit in the **Insert unit** control. The unit is inserted at the cursor and appears formatted as mathematics. For example, define `d:=1500 m` and `t:=120 s`; `d/t=` shows `12,5 m/s`. The file `examples/units-canvas.mathdoc` also shows a conversion to `45 km/h` and another to `1,5 km`. The last expression tries to add length and time and displays a dimensional error. To convert, select an equation and choose the desired unit in **Display in**. The mathematical expression remains readable; the conversion stays associated with the sheet region.
+On the sheet, select an equation and choose a unit in the **Insert unit** control. The unit is inserted at the cursor and appears formatted as mathematics. For example, define `d:=1500 m` and `t:=120 s`; `d/t=` shows `12.5 m/s`. The file `examples/units-canvas.mathdoc` also shows a conversion to `45 km/h` and another to `1.5 km`. The last expression tries to add length and time and displays a dimensional error. To convert, select an equation and choose the desired unit in **Display in**. The mathematical expression remains readable; the conversion stays associated with the sheet region.
 
 ### How to run
 
