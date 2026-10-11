@@ -3,7 +3,17 @@
   "displayName": "Mathsheet — Live Math Worksheet",
   "description": "Write math on a visual sheet and get live results: editable equations, engineering units, plots and Python blocks.",
   "version": "0.0.2",
+  "publisher": "lgili",
+  "license": "MIT",
+  "icon": "media/icon.png",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lgili/Mathsheet.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lgili/Mathsheet/issues"
+  },
   "engines": {
     "vscode": "^1.85.0"
   },
@@ -12,7 +22,21 @@
     "onCustomEditor:mathsheet.sheet",
     "onCommand:mathsheet.newSheet"
   ],
+  "galleryBanner": {
+    "color": "#1c6b46",
+    "theme": "dark"
+  },
   "contributes": {
+    "configuration": {
+      "title": "Mathsheet",
+      "properties": {
+        "mathsheet.python.interpreter": {
+          "type": "string",
+          "default": "python3",
+          "markdownDescription": "Python interpreter used by Mathsheet code blocks. Leave empty to search `python3` on the `PATH`."
+        }
+      }
+    },
     "commands": [
       {
         "command": "mathsheet.newSheet",
@@ -49,13 +73,17 @@
     "examples:reset": "node tools/make-examples.mjs",
     "examples:check": "node tools/make-examples.mjs --check",
     "verify:ui": "node tools/verify-ui.mjs",
-    "verify": "npm test && npm run examples:check && npm run verify:ui"
+    "verify": "npm test && npm run examples:check && npm run verify:ui",
+    "package": "vsce package --out mathsheet.vsix",
+    "publish": "vsce publish --no-dependencies"
   },
   "dependencies": {
     "@cortex-js/compute-engine": "0.151.0",
     "mathlive": "0.111.1"
   },
   "devDependencies": {
+    "@vscode/vsce": "^4.0.0",
     "esbuild": "0.28.2"
-  }
+  },
+  "homepage": "https://github.com/lgili/Mathsheet#readme"
 }

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-label="Mathsheet">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#43bd86"/>
+      <stop offset="1" stop-color="#1c6b46"/>
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" rx="56" fill="url(#bg)"/>
+  <path d="M52 40h108l44 44v132H52z" fill="#ffffff" fill-opacity="0.12"/>
+  <path d="M160 40l44 44h-44z" fill="#ffffff" fill-opacity="0.35"/>
+  <g fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="44" y="48" width="168" height="160" rx="18" stroke-width="10" stroke-opacity="0.55"/>
+    <path d="M80 116h40" stroke-width="15"/>
+    <path d="M100 96v40" stroke-width="15"/>
+    <path d="M140 104h36" stroke-width="15"/>
+    <path d="M140 128h36" stroke-width="15"/>
+    <path d="M80 160h96" stroke-width="9" stroke-opacity="0.55"/>
+  </g>
+</svg>

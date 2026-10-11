@@ -4,3 +4,9 @@
 docs/**
 test/**
 tools/**
+.npm-cache/**
+.gitignore
+.vscodeignore
+package-lock.json
+media/icon.svg
+*.vsix

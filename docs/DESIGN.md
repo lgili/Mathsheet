@@ -55,7 +55,7 @@ New block type in the `.mathdoc` document (`layout: 'canvas'` format):
 ### 3.2 Where Python runs
 
 - A `PythonKernel` service in the extension host (new module, e.g. `engine/python-kernel.js`) is responsible for:
-  - discovering the interpreter (`python3` on the `PATH`, configurable via the `math.python.interpreter` setting);
+  - discovering the interpreter (`python3` on the `PATH`, configurable via the `mathsheet.python.interpreter` setting);
   - launching the process with `-u` (unbuffered) and keeping the session alive;
   - implementing the JSON-RPC protocol below;
   - exposing `status` (`idle | busy | starting | dead`), `run()`, `interrupt()`, `restart()`.
@@ -130,7 +130,7 @@ Rules:
 
 - **One session per document.** Python blocks share the same kernel and execute in document order; assignments from one block hold for the following ones.
 - **Reproducible default = restart & run-all.** When the document is opened, and by default on every change that affects order or inputs, the orchestrator restarts the kernel and re-executes everything from scratch. This preserves the reproducibility invariant.
-- **Explicit Run for heavy work.** Each Python block has a **Run** and an **Interrupt** button. Incremental optimisations ("run from the changed block") come later.
+- **Explicit Run for heavy work.** Each Python block has a **Run** and an **Interrupt** button. Incremental optimizations ("run from the changed block") come later.
 - **Dependency boundary.** Sheet variables defined **above** the block come in as `inputs`; what the block exports becomes a mathematical symbol available **below**.
 
 ### 3.5 Variable bridge
@@ -151,7 +151,7 @@ Reserved for later stages (already provided for in the contract, **do not implem
 {"type":"string","value":"…"}
 ```
 
-This schema is the same format that [`finiteRealOrQuantity`](engine/canvas-core.mjs) already produces for `value`/`unit`; the bridge only generalises it with `type`.
+This schema is the same format that [`finiteRealOrQuantity`](engine/canvas-core.mjs) already produces for `value`/`unit`; the bridge only generalizes it with `type`.
 
 #### Sheet → Python
 
@@ -242,7 +242,7 @@ registerAction({
 })
 ```
 
-- The **context** (`ctx`) is exactly what the `focusin` of [`media/canvas.js`](media/canvas.js) already tracks (`activeMathField`, `activeBlock`) — generalise it into a single `SelectionContext`.
+- The **context** (`ctx`) is exactly what the `focusin` of [`media/canvas.js`](media/canvas.js) already tracks (`activeMathField`, `activeBlock`) — generalize it into a single `SelectionContext`.
 - Each action is a command over the context: insert a template into the field, add a block, change a curve, run code, etc.
 
 ### 4.3 Function gallery = editable templates
